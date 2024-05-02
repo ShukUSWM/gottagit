@@ -1,6 +1,5 @@
 import socket
 
-
 host = "192.168.1.7"
 port = 7777
 
@@ -9,40 +8,41 @@ while True:
     try:
         s.connect((host, port))
 
-        data = s.recv(1024) # received the banner
-        print(data.decode().strip())  # print banner
+        # received the banner
+        data = s.recv(1024)
+        # print banner
+        print(data.decode().strip())
 
         while True:
-            user_input = input("").strip()  # let get our input from the user
+            # let's get our input from the user
+            user_input = input("").strip()
 
             s.sendall(user_input.encode())
             reply = s.recv(1024).decode().strip()
 
             if not reply:
-                print("Server closed the connection")
+                print("Server closed the connection.")
                 break
 
-            if "correct" in reply:
+            if "Correct" in reply:
                 print(reply)
                 break
 
             print(reply)
 
-            # Ask the user if they want to play again or quit
-            print("\n")
-            print("Do you want to:")
-            print("1. Play Again?")
-            print("2. Quit the game?")
-            choice = input("Enter corresponding number: ")
-            if choice != "1":
-                print("Thanks For Playing :DDD")
-                break
+        # Ask the user if they want to play again or quit
+        print("\n")
+        print("Do you want to:")
+        print("1. Play Again?")
+        print("2. Quit the Game?")
+        choice = input("Enter corresponding number: ")
+        if choice != "1":
+            print("Thanks for Playing :DDD")
+            break
 
     except ConnectionAbortedError:
-        print("Connection was aborted by the software in you host. Please try again.")
+        print("Connection was aborted by the software in your host machine. Please try again.")
     except ConnectionResetError:
-        print("Connection was reset by the server. Please try again")
+        print("Connection was reset by the server. Please try again.")
     finally:
         s.close()
-
-
