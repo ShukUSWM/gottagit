@@ -1,28 +1,48 @@
 import socket
 
 
-host = "10.125.41.154"
+host = "192.168.1.7"
 port = 7777
 
-
-s = socket.socket()
-s.connect((host, port))
-
-# received the banner
-data = s.recv(1024)
-# print banner
-print(data.decode().strip())
-
 while True:
-    #let get our input from the user
-    user_input = input("").strip()
+    s = socket.socket()
+    try:
+        s.connect((host, port))
 
-    s.sendall(user_input.encode())
-    reply = s.recv(1024).decode().strip()
-    if "Correct" in reply:
-        print(reply)
-        break
-    print(reply)
-    continue
-s.close()
+        data = s.recv(1024) # received the banner
+        print(data.decode().strip())  # print banner
+
+        while True:
+            user_input = input("").strip()  # let get our input from the user
+
+            s.sendall(user_input.encode())
+            reply = s.recv(1024).decode().strip()
+
+            if not reply:
+                print("Server closed the connection")
+                break
+
+            if "correct" in reply:
+                print(reply)
+                break
+
+            print(reply)
+
+            # Ask the user if they want to play again or quit
+            print("\n")
+            print("Do you want to:")
+            print("1. Play Again?")
+            print("2. Quit the game?")
+            choice = input("Enter corresponding number: ")
+            if choice != "1":
+                print("Thanks For Playing :DDD")
+                break
+
+    except ConnectionAbortedError:
+        print("Connection was aborted by the software in you host. Please try again.")
+    except ConnectionResetError:
+        print("Connection was reset by the server. Please try again")
+    finally:
+        s.close()
+
 
